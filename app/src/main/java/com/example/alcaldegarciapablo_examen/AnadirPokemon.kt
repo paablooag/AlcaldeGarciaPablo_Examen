@@ -21,6 +21,7 @@ class AnadirPokemon : AppCompatActivity() {
     lateinit var entrenador:TextInputEditText
     lateinit var estatura:TextInputEditText
     lateinit var fecha:TextInputEditText
+    lateinit var spinner:AutoCompleteTextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +29,7 @@ class AnadirPokemon : AppCompatActivity() {
 
 
 
-        var spinner = findViewById<AutoCompleteTextView>(R.id.spinner)
+        spinner = findViewById<AutoCompleteTextView>(R.id.spinner)
 
         val tipos = arrayOf("Agua", "Fuego", "Tierra", "Aire", "Bosque", "Gamer", "Fumador", "Reggaetonero", "Trapero", "Homosexual")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, tipos)
@@ -87,18 +88,30 @@ class AnadirPokemon : AppCompatActivity() {
 
             picker.show(supportFragmentManager, picker.toString())
         }
-
-
-
     }
 
     fun botonEnviar(view: View) {
+            val nombreText = nombre.text.toString()
+            val estaturaText = estatura.text.toString().toIntOrNull() ?: 0
+            val fechaText = fecha.text.toString()
+            val tipoText = spinner.text.toString()
 
+            if (nombreText.isNotBlank() && estaturaText > 0 && fechaText.isNotBlank() && tipoText.isNotBlank()) {
+                val intent = Intent(this, ListadoPokemon::class.java)
+                intent.putExtra("NOMBRE", nombreText)
+                intent.putExtra("ESTATURA", estaturaText)
+                intent.putExtra("FECHA", fechaText)
+                intent.putExtra("TIPO", tipoText)
+                Toast.makeText(this, "Añadido", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Todos los campos son obligatorios", Toast.LENGTH_SHORT).show()
+
+        }
     }
 
     fun atras(view: View) {
-
         var newintent = Intent(this, MainActivity::class.java)
         startActivity(newintent)
     }
 }
+
